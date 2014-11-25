@@ -1,13 +1,24 @@
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <sstream>
 using namespace std;
 
-
+void printvector (vector<string> &tokens)
+{
+        cout << "Here's the Parsed Elements"<<endl;
+        for(int i = 0; i < tokens.size(); i++)
+                cout << tokens[i] << endl;
+}
 
 //
 int main (int argc, char* argv[]) {
   fstream myfile;
+  int InputlineLoopCounter = 0;
   string line;
+  string temp;
+  vector< vector<string> > parsed_array;
+  vector<string> parsed_element;
   cout<<"Argument Num:"<<argc<<endl;
   if(argc < 1)          // we expect exact one argument
  {
@@ -23,6 +34,13 @@ int main (int argc, char* argv[]) {
         while (getline (myfile,line))
                 {
                         cout << line <<endl;
+                        stringstream ss(line);
+                        while (ss >> temp)
+                                parsed_element.push_back(temp);
+                        printvector(parsed_element);
+	                        parsed_array.push_back(parsed_element);  // A[2].push_back(5) is used to add string, not add vector
+	                        InputlineLoopCounter ++;
+	                        cout << "InputlineLoopCounter: "<<InputlineLoopCounter<<endl;
                 }
         }
   else
@@ -31,4 +49,3 @@ int main (int argc, char* argv[]) {
   myfile.close();
   return 0;
 }
-
