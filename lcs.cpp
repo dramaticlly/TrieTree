@@ -8,10 +8,22 @@ void printvector (vector<string> &tokens)
 {
         cout << "Here's the Parsed Elements"<<endl;
         for(int i = 0; i < tokens.size(); i++)
-                cout << tokens[i] << endl;
+                cout << tokens[i] << ",";
+        cout<<endl;
 }
 
-//
+void print2dvector( vector< vector<string> >& tokens)
+{
+        cout << "Here's the Parsed Array"<<endl;
+
+        for (int i = 0; i < tokens.size(); i++)
+        {
+        	cout << "i = "<<i<<endl;
+        	printvector(tokens[i]);
+        }
+}
+//       //vector< vector<string> >::iterator iter = tokens.begin();
+        //vector< vector<string> >::iterator endr = tokens.end();
 int main (int argc, char* argv[]) {
   fstream myfile;
   int InputlineLoopCounter = 0;
@@ -42,6 +54,7 @@ int main (int argc, char* argv[]) {
 	                        InputlineLoopCounter ++;
 	                        cout << "InputlineLoopCounter: "<<InputlineLoopCounter<<endl;
                 }
+             print2dvector(parsed_array);
         }
   else
         cout << "Unable to read from file"<<endl;
