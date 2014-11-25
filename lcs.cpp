@@ -6,9 +6,9 @@ using namespace std;
 
 void printvector (vector<string> &tokens)
 {
-        cout << "Here's the Parsed Elements"<<endl;
+        //cout << "<	  Here's the Parsed Elements"<<endl;
         for(int i = 0; i < tokens.size(); i++)
-                cout << tokens[i] << ",";
+                cout << "element["<< i << "]=" << tokens[i] << ",";
         cout<<endl;
 }
 
@@ -18,7 +18,7 @@ void print2dvector( vector< vector<string> >& tokens)
 
         for (int i = 0; i < tokens.size(); i++)
         {
-        	cout << "i = "<<i<<endl;
+        	cout << "Array["<< i <<"]= "<<endl;
         	printvector(tokens[i]);
         }
 }
@@ -31,7 +31,7 @@ int main (int argc, char* argv[]) {
   string temp;
   vector< vector<string> > parsed_array;
   vector<string> parsed_element;
-  cout<<"Argument Num:"<<argc<<endl;
+  cout<<"<	  Argument Numumber:"<<argc<<endl;
   if(argc < 1)          // we expect exact one argument
  {
          std::cerr << "Usage: " << argv[0] << " File Path " << std::endl;
@@ -39,12 +39,13 @@ int main (int argc, char* argv[]) {
  }
 
   myfile.open (argv[1]);  //argv[0] is ./lcs, not the first argument!!!
-  cout << "successful open the file. File name \""<<argv[1]<<"\""<<endl;
+  cout << "<	Successful open the file!\n<	File name: \""<<argv[1]<<"\""<<endl;
   //if file is open, tehn read from the file
   if (myfile.is_open())
         {
         while (getline (myfile,line))
                 {
+                		parsed_element.clear(); //if I dont clear, it would include previous word, interesting
                         cout << line <<endl;
                         stringstream ss(line);
                         while (ss >> temp)
@@ -52,7 +53,7 @@ int main (int argc, char* argv[]) {
                         printvector(parsed_element);
 	                        parsed_array.push_back(parsed_element);  // A[2].push_back(5) is used to add string, not add vector
 	                        InputlineLoopCounter ++;
-	                        cout << "InputlineLoopCounter: "<<InputlineLoopCounter<<endl;
+	                        cout << "<	  InputlineLoopCounter: "<<InputlineLoopCounter<<endl;
                 }
              print2dvector(parsed_array);
         }
