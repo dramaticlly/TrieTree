@@ -4,6 +4,7 @@
 #include <sstream>
 #include <tr1/functional>
 #include <string>
+#include <algorithm>
 using namespace std;
 
 void printvector (vector<string> &tokens)
@@ -24,6 +25,12 @@ void print2dvector( vector< vector<string> >& tokens)
                 printvector(tokens[i]);
         }
 }
+
+int vstrcmp (string a, string b)
+{
+// return strcmp(a,b) < 0;
+
+}
 //
 int main (int argc, char* argv[]) {
   fstream myfile;
@@ -40,7 +47,7 @@ int main (int argc, char* argv[]) {
          std::cerr << "Usage: " << argv[0] << " File Path " << std::endl;
          return -1;
  }
-
+ 
   myfile.open (argv[1]);  //argv[0] is ./lcs, not the first argument!!!
   cout << "<    Successful open the file!\n<    File name: \""<<argv[1]<<"\""<<endl;
   //if file is open, tehn read from the file
@@ -64,7 +71,11 @@ int main (int argc, char* argv[]) {
                         }
                        choped_element.pop_back();
                        printvector(parsed_element);
-                       printvector(choped_element);
+                       cout<<"Before Sort"<<endl;
+                         printvector(choped_element);
+                         sort(choped_element.begin(),choped_element.end());
+                       cout<<"After Sort"<<endl;
+                         printvector(choped_element);
                        parsed_array.push_back(parsed_element);
                        InputlineLoopCounter ++;
                 }
@@ -76,3 +87,4 @@ int main (int argc, char* argv[]) {
   myfile.close();
   return 0;
 }
+
