@@ -26,10 +26,50 @@ void print2dvector( vector< vector<string> >& tokens)
         }
 }
 
-int vstrcmp (string a, string b)
+int minsize (int a, int b)
+{
+  if (a <= 0 || b <= 0)
+        return -1;
+  if ( a < b)
+        return a;
+  else               // a = b or a < b
+        return b;
+}
+void vfindcommon (vector<string>&v1,vector<string>&v2)
 {
 // return strcmp(a,b) < 0;
+ cout << "<    Enter vfindcommon function\n";
+ cout << "v1 size: "<<v1.size()<<endl;
+ cout << "v2 size: "<<v2.size()<<endl;
+ int ret = minsize(v1.size(),v2.size());
+ cout << "return code: "<<ret<<endl;
+ if (ret > 0)
+ {
+ printvector(v1);
+ printvector(v2);
+ int *index = new int [ret*2];
+ int commoncount = 0;
+ for (int i = 0; i < v1.size(); i++)
+        {
+      //  cout << "< i = "<<i;
+        for (int j = 0;  j< v2.size(); j++)
+                {
+                cout << " j = "<<j<<endl;
+               // if(v1[i] == v2[j])
+                        {
+                        index[commoncount] = i;   // even number are for first vector index
+                        index[commoncount+1] = j; // odd number are for secodn vector index
+                        cout << "index["<<commoncount<<"]: "<<i
+                             << "\nindex["<<commoncount+1<<"]: "<<j<<endl;
+                        commoncount = commoncount + 2;
+                 //       cout << "commoncount :"<<commoncount<<endl;
+                        break;
+                  //      cout << "this line should never appear\n";
+                        }
+                }
+        }
 
+ }
 }
 //
 int main (int argc, char* argv[]) {
@@ -47,7 +87,7 @@ int main (int argc, char* argv[]) {
          std::cerr << "Usage: " << argv[0] << " File Path " << std::endl;
          return -1;
  }
- 
+
   myfile.open (argv[1]);  //argv[0] is ./lcs, not the first argument!!!
   cout << "<    Successful open the file!\n<    File name: \""<<argv[1]<<"\""<<endl;
   //if file is open, tehn read from the file
@@ -70,16 +110,18 @@ int main (int argc, char* argv[]) {
                         choped_element.push_back(copystr);
                         }
                        choped_element.pop_back();
-                       printvector(parsed_element);
-                       cout<<"Before Sort"<<endl;
-                         printvector(choped_element);
+                      printvector(parsed_element);
+                     //  cout<<"Before Sort"<<endl;
+                     //    printvector(choped_element);
                          sort(choped_element.begin(),choped_element.end());
                        cout<<"After Sort"<<endl;
-                         printvector(choped_element);
-                       parsed_array.push_back(parsed_element);
+                         printvector(parsed_element);
+                       parsed_array.push_back(choped_element);
                        InputlineLoopCounter ++;
                 }
-            // print2dvector(parsed_array);
+        cout<<" enter vfindcommon function"<<endl;
+        vfindcommon(parsed_array[0],parsed_array[1]);
+        //     print2dvector(parsed_array);
         }
   else
         cout << "Unable to read from file"<<endl;
@@ -87,4 +129,3 @@ int main (int argc, char* argv[]) {
   myfile.close();
   return 0;
 }
-
