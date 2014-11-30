@@ -47,28 +47,41 @@ void vfindcommon (vector<string>&v1,vector<string>&v2)
  {
  printvector(v1);
  printvector(v2);
- int *index = new int [ret*2];
- int commoncount = 0;
+ int *index = new int [ret*2];  //worst condition, v1 is subset of v2, so need at least 2*v1 length to store index
+
  for (int i = 0; i < v1.size(); i++)
         {
-      //  cout << "< i = "<<i;
+        //cout << "< i = "<<i;
+        stringstream ss1(v1[i]);
+        string fword1;
+        ss1>>fword1;
         for (int j = 0;  j< v2.size(); j++)
                 {
-                cout << " j = "<<j<<endl;
-               // if(v1[i] == v2[j])
+                stringstream ss2(v2[j]);
+                string fword2;
+                ss2>>fword2; 
+                if(fword1 == fword2)   //v1[i] and v2[j] are space seperated words
                         {
-                        index[commoncount] = i;   // even number are for first vector index
-                        index[commoncount+1] = j; // odd number are for secodn vector index
-                        cout << "index["<<commoncount<<"]: "<<i
-                             << "\nindex["<<commoncount+1<<"]: "<<j<<endl;
-                        commoncount = commoncount + 2;
-                 //       cout << "commoncount :"<<commoncount<<endl;
-                        break;
-                  //      cout << "this line should never appear\n";
-                        }
+                          cout<< "fword1: "<<fword1<<" ,fword2: "<<fword2<<endl;
+                          string nword1;
+                          string nword2;
+                          int comlen = 1;
+                          while (ss1>>nword1 && ss2>>nword2)
+                          {
+                            if (nword1 == nword2)
+                                {
+                                  cout<<"Next word: "<<nword1<<endl;
+                                  comlen ++;
+                                }
+                            else 
+                              break;
+                          }
+                          cout<< "longest common length: "<<comlen<<endl;
+            }
+                  else 
+                        cout<< "different "<<i<<" , "<<j<<endl;
                 }
         }
-
  }
 }
 //
@@ -81,6 +94,7 @@ int main (int argc, char* argv[]) {
   vector< vector<string> > parsed_array;
   vector<string> parsed_element;
   vector<string> choped_element;
+  vector<string> reduced_element;
   cout<<"<       Argument Numumber:"<<argc<<endl;
   if(argc < 1)          // we expect exact one argument
  {
