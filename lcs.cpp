@@ -15,7 +15,7 @@ void printvector (vector<string> &tokens)
             return ;
         }
 //      cout << "Here's the Parsed Elements"<<endl;
-        for(int i = 0; i < tokens.size(); i++)
+        for(size_t i = 0; i < tokens.size(); i++)
                 cout << "element["<< i << "]=" << tokens[i] <<endl ;
         cout<<endl;
 }
@@ -25,7 +25,7 @@ void print2dvector( vector< vector<string> >& tokens)
         cout << "Here's the Parsed Array"<<endl;
         cout << "I have "<<tokens.size()<<" element\n";
 
-        for (int i = 0; i < tokens.size(); i++)
+        for (size_t i = 0; i < tokens.size(); i++)
         {
                 cout << "Array["<< i <<"]= "<<endl;
                 printvector(tokens[i]);
@@ -51,13 +51,13 @@ void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
  {
 //\\ printvector(v1);
 //\\ printvector(v2);
-  for (int i = 0; i < v1.size(); i++)
+  for (size_t i = 0; i < v1.size(); i++)
         {
         //cout << "< i = "<<i;
         stringstream ss1(v1[i]);
         string fword1;
         ss1>>fword1;
-        for (int j = 0;  j< v2.size(); j++)
+        for (size_t j = 0;  j< v2.size(); j++)
                 {
                 stringstream ss2(v2[j]);
                 string fword2;
@@ -107,7 +107,7 @@ string findlongest (vector<string>tokens)
 //\\    cout << "array size is "<<tokens.size()<<endl;
     int maxlen = 0;
     int maxindex = -1;
-    for( int i = 0; i < tokens.size(); i++) //tokens[0] should be the only vector
+    for( size_t i = 0; i < tokens.size(); i++) //tokens[0] should be the only vector
     {
    //\\     cout << tokens[i] <<endl;
         if(tokens[i].length() > maxlen)
@@ -124,7 +124,6 @@ int main (int argc, char* argv[]) {
   fstream myfile;
   string line;
   string temp;
-  tr1::hash<string> strHash;
   int InputlineLoopCounter = 0;
   vector< vector<string> > parsed_array;
   vector<string> parsed_element;
