@@ -9,6 +9,11 @@ using namespace std;
 
 void printvector (vector<string> &tokens)
 {
+    if (tokens.size() == 0)
+        {
+            cout<<"empty container\n";
+            return ;
+        }
 //      cout << "Here's the Parsed Elements"<<endl;
         for(int i = 0; i < tokens.size(); i++)
                 cout << "element["<< i << "]=" << tokens[i] <<endl ;
@@ -18,6 +23,7 @@ void printvector (vector<string> &tokens)
 void print2dvector( vector< vector<string> >& tokens)
 {
         cout << "Here's the Parsed Array"<<endl;
+        cout << "I have "<<tokens.size()<<" element\n";
 
         for (int i = 0; i < tokens.size(); i++)
         {
@@ -35,9 +41,10 @@ int minsize (int a, int b)
   else               // a = b or a < b
         return b;
 }
-void vfindcommon (vector<string>&v1,vector<string>&v2)
+void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
 {
 // return strcmp(a,b) < 0;
+ string space = " ";
  cout << "<    Enter vfindcommon function\n";
  cout << "v1 size: "<<v1.size()<<endl;
  cout << "v2 size: "<<v2.size()<<endl;
@@ -48,8 +55,7 @@ void vfindcommon (vector<string>&v1,vector<string>&v2)
  printvector(v1);
  printvector(v2);
  int *index = new int [ret*2];  //worst condition, v1 is subset of v2, so need at least 2*v1 length to store index
-
- for (int i = 0; i < v1.size(); i++)
+  for (int i = 0; i < v1.size(); i++)
         {
         //cout << "< i = "<<i;
         stringstream ss1(v1[i]);
@@ -59,26 +65,41 @@ void vfindcommon (vector<string>&v1,vector<string>&v2)
                 {
                 stringstream ss2(v2[j]);
                 string fword2;
-                ss2>>fword2; 
+                ss2>>fword2;
                 if(fword1 == fword2)   //v1[i] and v2[j] are space seperated words
-                        {
+                      {
                           cout<< "fword1: "<<fword1<<" ,fword2: "<<fword2<<endl;
                           string nword1;
                           string nword2;
+                          string lcommon;
                           int comlen = 1;
+                          //stringstream combine;
+                          string combine;
+                          combine.append(fword1);
+                          combine.append(space);
+                          //combine<<fword1;
+        //                combine<<space;
                           while (ss1>>nword1 && ss2>>nword2)
                           {
                             if (nword1 == nword2)
                                 {
+                                  //combine<<nword1;
+                                  combine.append(nword1);
+                                  combine.append(space);
+                //                combine<<space;
                                   cout<<"Next word: "<<nword1<<endl;
                                   comlen ++;
                                 }
-                            else 
+                            else
                               break;
                           }
+                          //combine.erase(combine.find_last_of("\t"));
+                          //combine >>lcommon;
+                          cout<< "lcs: "<<combine<<endl;
+                          v3.push_back(combine);
                           cout<< "longest common length: "<<comlen<<endl;
-            }
-                  else 
+                      }
+               else
                         cout<< "different "<<i<<" , "<<j<<endl;
                 }
         }
@@ -134,7 +155,12 @@ int main (int argc, char* argv[]) {
                        InputlineLoopCounter ++;
                 }
         cout<<" enter vfindcommon function"<<endl;
-        vfindcommon(parsed_array[0],parsed_array[1]);
+        vfindcommon(parsed_array[0],parsed_array[1],reduced_element);
+        sort(reduced_element.begin(),reduced_element.end());
+        parsed_array.erase(parsed_array.begin(),parsed_array.begin()+2);
+        parsed_array.insert(parsed_array.begin(),reduced_element);
+        printvector(reduced_element);
+        print2dvector(parsed_array);
         //     print2dvector(parsed_array);
         }
   else
@@ -143,3 +169,4 @@ int main (int argc, char* argv[]) {
   myfile.close();
   return 0;
 }
+
