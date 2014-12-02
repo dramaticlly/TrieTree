@@ -105,6 +105,24 @@ void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
         }
  }
 }
+string findlongest (vector<string>tokens)
+{
+    cout << "Enter findlongest function\n";
+    cout << "array size is "<<tokens.size()<<endl;
+    int maxlen = 0;
+    int maxindex = -1;
+    for( int i = 0; i < tokens.size(); i++) //tokens[0] should be the only vector
+    {
+        cout << tokens[i] <<endl;
+        if(tokens[i].length() > maxlen)
+            {
+                maxlen = tokens[i].length();
+                maxindex = i;
+                cout << "current max len: "<<maxlen<<endl;
+            }
+    }
+    return tokens[maxindex];
+}
 //
 int main (int argc, char* argv[]) {
   fstream myfile;
@@ -154,14 +172,26 @@ int main (int argc, char* argv[]) {
                        parsed_array.push_back(choped_element);
                        InputlineLoopCounter ++;
                 }
-        cout<<" enter vfindcommon function"<<endl;
-        vfindcommon(parsed_array[0],parsed_array[1],reduced_element);
-        sort(reduced_element.begin(),reduced_element.end());
-        parsed_array.erase(parsed_array.begin(),parsed_array.begin()+2);
-        parsed_array.insert(parsed_array.begin(),reduced_element);
-        printvector(reduced_element);
-        print2dvector(parsed_array);
-        //     print2dvector(parsed_array);
+              for (int i = 1; i < InputlineLoopCounter ; i ++)   //if 3 lines, need only 2 comparison
+                {
+                    reduced_element.clear();
+                    cout<<" enter vfindcommon function"<<endl;
+                    vfindcommon(parsed_array[0],parsed_array[1],reduced_element);  //every time after comparison, resize vector,so alway [0] and [1]
+                    sort(reduced_element.begin(),reduced_element.end());
+                    parsed_array.erase(parsed_array.begin(),parsed_array.begin()+2);
+                    parsed_array.insert(parsed_array.begin(),reduced_element);
+        cout <<"<  print reduced element\n";
+                    printvector(reduced_element);
+        cout <<"<  print element array\n";
+                    print2dvector(parsed_array);
+                }
+            if (parsed_array.size() == 1)
+            {
+                string lcs = findlongest(parsed_array[0]);
+                cout << "<  lcs: "<<lcs<<endl;
+            }
+            else 
+                cout <<"array problem\n";
         }
   else
         cout << "Unable to read from file"<<endl;
