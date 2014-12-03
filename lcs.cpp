@@ -9,26 +9,28 @@ using namespace std;
 
 void printvector (vector<string> &tokens)
 {
-    if (tokens.size() == 0)
+    size_t len = tokens.size();
+    if (len == 0)
         {
             cout<<"empty container\n";
             return ;
         }
 //      cout << "Here's the Parsed Elements"<<endl;
-        for(size_t i = 0; i < tokens.size(); i++)
+        for(size_t i = 0; i < len; i++)
                 cout << "element["<< i << "]=" << tokens[i] <<endl ;
         cout<<endl;
 }
 
 void print2dvector( vector< vector<string> >& tokens)
 {
+        size_t len = tokens.size();
         cout << "Here's the Parsed Array"<<endl;
-        cout << "I have "<<tokens.size()<<" element\n";
+        cout << "I have "<<len<<" element\n";
 
-        for (size_t i = 0; i < tokens.size(); i++)
+        for (size_t i = 0; i < len; i++)
         {
                 cout << "Array["<< i <<"]= "<<endl;
-                printvector(tokens[i]);
+       //         printvector(tokens[i]);
         }
 }
 
@@ -44,23 +46,26 @@ int minsize (int a, int b)
 void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
 {
 // return strcmp(a,b) < 0;
+ size_t v1len = v1.size();
+ size_t v2len = v2.size();
  string space = " ";
- int ret = minsize(v1.size(),v2.size());
-//\\ cout << "return code: "<<ret<<endl;
+ int ret = minsize(v1len,v2len);
+ cout << "return code: "<<ret<<endl;
  if (ret > 0)
  {
-//\\ printvector(v1);
-//\\ printvector(v2);
-  for (size_t i = 0; i < v1.size(); i++)
+ printvector(v1);
+ printvector(v2);
+  for (size_t i = 0; i < v1len; i++)
         {
         //cout << "< i = "<<i;
-        stringstream ss1(v1[i]);
-        string fword1;
-        ss1>>fword1;
-        for (size_t j = 0;  j< v2.size(); j++)
+        
+        for (size_t j = 0;  j< v2len; j++)
                 {
+                stringstream ss1(v1[i]);
                 stringstream ss2(v2[j]);
+                string fword1;
                 string fword2;
+                ss1>>fword1;
                 ss2>>fword2;
                 if(fword1 == fword2)   //v1[i] and v2[j] are space seperated words
                       {
@@ -69,56 +74,98 @@ void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
                           string nword2;
                           string lcommon;
                           int comlen = 1;
-                          //stringstream combine;
                           string combine;
                           combine.append(fword1);
                           combine.append(space);
-                          //combine<<fword1;
-        //                combine<<space;
                           while (ss1>>nword1 && ss2>>nword2)
                           {
                             if (nword1 == nword2)
                                 {
-                                  //combine<<nword1;
                                   combine.append(nword1);
                                   combine.append(space);
-                //                combine<<space;
-                //\\                  cout<<"Next word: "<<nword1<<endl;
+                //\\              cout<<"Next word: "<<nword1<<endl;
                                   comlen ++;
                                 }
                             else
                               break;
                           }
                           //combine.erase(combine.find_last_of("\t"));
-                          //combine >>lcommon;
-                //\\          cout<< "lcs: "<<combine<<endl;
-                          v3.push_back(combine);
+                       // cout<< "lcs: "<<combine<<endl;
+                        v3.push_back(combine);
                 //\\          cout<< "longest common length: "<<comlen<<endl;
                       }
             //\\   else
             //\\            cout<< "different "<<i<<" , "<<j<<endl;
                 }
         }
+        sort(v3.begin(),v3.end());
+        v3.erase(unique(v3.begin(),v3.end()),v3.end());
+        printvector(v3);
  }
 }
 string findlongest (vector<string>tokens)
 {
 //\\    cout << "Enter findlongest function\n";
 //\\    cout << "array size is "<<tokens.size()<<endl;
-    int maxlen = 0;
+    size_t maxlen = 0;
     int maxindex = -1;
     for( size_t i = 0; i < tokens.size(); i++) //tokens[0] should be the only vector
     {
    //\\     cout << tokens[i] <<endl;
-        if(tokens[i].length() > maxlen)
+        size_t strlen = tokens[i].length();
+        if(strlen > maxlen)
             {
-                maxlen = tokens[i].length();
+                maxlen = strlen;
                 maxindex = i;
     //\\            cout << "current max len: "<<maxlen<<endl;
             }
     }
     return tokens[maxindex];
 }
+
+void recur(vector< vector<string> >&v, int ILC)
+{
+  vector<string> reduced_element;
+  if (ILC == 0)
+    return;
+  else if (ILC == 1)    //base case
+    return;
+  else if (ILC % 2 == 0)   //gurantee ILC is even
+  {
+    cout <<"<  even, ILC: "<<ILC<<endl;
+    for (int i = 0; i<ILC; i += 2)
+    {
+      cout <<"<  i:"<<i<<endl;
+      reduced_element.clear();
+      vfindcommon(v[i],v[i+1],reduced_element);
+      //sort(reduced_element.begin(),reduced_element.end());
+      //\\v.erase(v.begin(),v.begin()+2);     //after erase, index changes 
+      v.push_back(reduced_element);
+    }
+    v.erase(v.begin(),v.begin()+ILC);
+    print2dvector(v);
+    ILC = ILC / 2;
+    recur(v,ILC);
+  }
+  else if (ILC % 2 == 1)
+  {
+    cout <<"<  odd, ILC: "<<ILC<<endl;
+    for (int i = 0; i < ILC -2 ; i += 2)
+    {
+      cout <<"<  i:"<<i<<endl;
+      reduced_element.clear();
+      vfindcommon(v[i],v[i+1],reduced_element);
+     //sort(reduced_element.begin(),reduced_element.end());
+     //\\ v.erase(v.begin(),v.begin()+2);
+      v.push_back(reduced_element);
+    }
+    v.erase(v.begin(),v.begin()+ILC-1);
+    print2dvector(v);
+    ILC = (ILC / 2) + 1;
+    recur(v,ILC);
+  }
+}
+
 //
 int main (int argc, char* argv[]) {
   fstream myfile;
@@ -126,7 +173,7 @@ int main (int argc, char* argv[]) {
   string temp;
   int InputlineLoopCounter = 0;
   vector< vector<string> > parsed_array;
-  vector<string> parsed_element;
+ // vector<string> parsed_element;
   vector<string> choped_element;
   vector<string> reduced_element;
 //\\  cout<<"<       Argument Numumber:"<<argc<<endl;
@@ -144,7 +191,7 @@ int main (int argc, char* argv[]) {
         while (getline (myfile,line))
                 {
     //\\                   cout << "<       InputlineLoopCounter: "<<InputlineLoopCounter<<endl;
-                        parsed_element.clear(); //if I dont clear, it would include previous word, interesting
+      //                  parsed_element.clear(); //if I dont clear, it would include previous word, interesting
                         choped_element.clear();
      //\\                   cout << line <<endl;
                         choped_element.push_back(line);
@@ -153,7 +200,7 @@ int main (int argc, char* argv[]) {
                         string copystr (line);
                         while (ss >> temp)
                         {
-                        parsed_element.push_back(temp);
+       //                 parsed_element.push_back(temp);
                         copystr.erase(0,copystr.find_first_of(" \t")+1);
                         choped_element.push_back(copystr);
                         }
@@ -167,7 +214,12 @@ int main (int argc, char* argv[]) {
                        parsed_array.push_back(choped_element);
                        InputlineLoopCounter ++;
                 }
-              for (int i = 1; i < InputlineLoopCounter ; i ++)   //if 3 lines, need only 2 comparison
+
+                // this part of code can be optimized :), thinking about using recursion, and time complexcity would be log(n) instead of n-1
+                recur(parsed_array,InputlineLoopCounter);
+                cout << "<  get out of recursion\n";
+
+ /*             for (int i = 1; i < InputlineLoopCounter ; i ++)   //if 3 lines, need only 2 comparison
                 {
                     reduced_element.clear();
         //\\            cout<<" enter vfindcommon function"<<endl;
@@ -180,6 +232,7 @@ int main (int argc, char* argv[]) {
 //\\        cout <<"<  print element array\n";
 //\\                    print2dvector(parsed_array);
                 }
+ */               
             if (parsed_array.size() == 1)
             {
                 string lcs = findlongest(parsed_array[0]);

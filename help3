@@ -1,0 +1,38 @@
+ILC = 250;
+
+<  i:204
+return code: 10
+element[0]=best see
+element[1]=do mine eyes best see
+element[2]=eyes best see
+element[3]=i wink then do mine eyes best see
+element[4]=mine eyes best see
+element[5]=most i wink then do mine eyes best see
+element[6]=see
+element[7]=then do mine eyes best see
+element[8]=when most i wink then do mine eyes best see
+element[9]=wink then do mine eyes best see
+
+element[0]=best see
+element[1]=do mine eyes best see
+element[2]=eyes best see
+element[3]=i wink then do mine eyes best see
+element[4]=mine eyes best see
+element[5]=most i wink then do mine eyes best see
+element[6]=see
+element[7]=then do mine eyes best see
+element[8]=when
+element[9]=when most i wink then do mine eyes best see
+element[10]=wink then do mine eyes best see
+
+lcs: best see
+lcs: do mine eyes best see
+lcs: eyes best see
+lcs: i wink then do mine eyes best see
+lcs: mine eyes best see
+lcs: most i wink then do mine eyes best see
+lcs: see
+lcs: then do mine eyes best see
+lcs: when
+lcs: when
+lcs: wink then do mine eyes best see
