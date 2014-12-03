@@ -30,7 +30,7 @@ void print2dvector( vector< vector<string> >& tokens)
         for (size_t i = 0; i < len; i++)
         {
                 cout << "Array["<< i <<"]= "<<endl;
-       //         printvector(tokens[i]);
+//\\                printvector(tokens[i]);
         }
 }
 
@@ -58,14 +58,13 @@ void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
   for (size_t i = 0; i < v1len; i++)
         {
         //cout << "< i = "<<i;
-        
         for (size_t j = 0;  j< v2len; j++)
                 {
-                stringstream ss1(v1[i]);
+        stringstream ss1(v1[i]);
+        string fword1;
+        ss1>>fword1;
                 stringstream ss2(v2[j]);
-                string fword1;
                 string fword2;
-                ss1>>fword1;
                 ss2>>fword2;
                 if(fword1 == fword2)   //v1[i] and v2[j] are space seperated words
                       {
@@ -90,7 +89,7 @@ void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
                               break;
                           }
                           //combine.erase(combine.find_last_of("\t"));
-                       // cout<< "lcs: "<<combine<<endl;
+                        cout<< "lcs: "<<combine<<endl;
                         v3.push_back(combine);
                 //\\          cout<< "longest common length: "<<comlen<<endl;
                       }
@@ -98,10 +97,15 @@ void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
             //\\            cout<< "different "<<i<<" , "<<j<<endl;
                 }
         }
-        sort(v3.begin(),v3.end());
         v3.erase(unique(v3.begin(),v3.end()),v3.end());
         printvector(v3);
+    //\\    printvector(v3);
  }
+  else //if ret < )
+       {
+  cout <<v1len<<", "<<v2len<<endl;
+  return;
+       }
 }
 string findlongest (vector<string>tokens)
 {
@@ -126,11 +130,13 @@ string findlongest (vector<string>tokens)
 void recur(vector< vector<string> >&v, int ILC)
 {
   vector<string> reduced_element;
+  reduced_element.clear();
+
   if (ILC == 0)
     return;
   else if (ILC == 1)    //base case
     return;
-  else if (ILC % 2 == 0)   //gurantee ILC is even
+ else if (ILC % 2 == 0)   //gurantee ILC is even
   {
     cout <<"<  even, ILC: "<<ILC<<endl;
     for (int i = 0; i<ILC; i += 2)
@@ -155,11 +161,11 @@ void recur(vector< vector<string> >&v, int ILC)
       cout <<"<  i:"<<i<<endl;
       reduced_element.clear();
       vfindcommon(v[i],v[i+1],reduced_element);
-     //sort(reduced_element.begin(),reduced_element.end());
+      //sort(reduced_element.begin(),reduced_element.end());
      //\\ v.erase(v.begin(),v.begin()+2);
       v.push_back(reduced_element);
     }
-    v.erase(v.begin(),v.begin()+ILC-1);
+    v.erase(v.begin(),v.begin()+ILC-1); //since it's odd, keep last one
     print2dvector(v);
     ILC = (ILC / 2) + 1;
     recur(v,ILC);
@@ -218,6 +224,7 @@ int main (int argc, char* argv[]) {
                 // this part of code can be optimized :), thinking about using recursion, and time complexcity would be log(n) instead of n-1
                 recur(parsed_array,InputlineLoopCounter);
                 cout << "<  get out of recursion\n";
+
 
  /*             for (int i = 1; i < InputlineLoopCounter ; i ++)   //if 3 lines, need only 2 comparison
                 {
