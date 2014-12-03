@@ -97,6 +97,7 @@ void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
             //\\            cout<< "different "<<i<<" , "<<j<<endl;
                 }
         }
+        sort(v3.begin(),v3.end());
         v3.erase(unique(v3.begin(),v3.end()),v3.end());
         printvector(v3);
     //\\    printvector(v3);
