@@ -88,7 +88,7 @@ void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
                             else
                               break;
                           }
-                          //combine.erase(combine.find_last_of("\t"));
+                        combine.erase(combine.find_last_of(" "));
                         cout<< "lcs: "<<combine<<endl;
                         v3.push_back(combine);
                 //\\          cout<< "longest common length: "<<comlen<<endl;
@@ -99,7 +99,6 @@ void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
         }
         sort(v3.begin(),v3.end());
         v3.erase(unique(v3.begin(),v3.end()),v3.end());
-        printvector(v3);
     //\\    printvector(v3);
  }
   else //if ret < )
@@ -145,7 +144,7 @@ void recur(vector< vector<string> >&v, int ILC)
       cout <<"<  i:"<<i<<endl;
       reduced_element.clear();
       vfindcommon(v[i],v[i+1],reduced_element);
-      //sort(reduced_element.begin(),reduced_element.end());
+     // sort(reduced_element.begin(),reduced_element.end());
       //\\v.erase(v.begin(),v.begin()+2);     //after erase, index changes 
       v.push_back(reduced_element);
     }
@@ -178,11 +177,14 @@ int main (int argc, char* argv[]) {
   fstream myfile;
   string line;
   string temp;
+  string firstl;
+  string secondl;
   int InputlineLoopCounter = 0;
   vector< vector<string> > parsed_array;
  // vector<string> parsed_element;
   vector<string> choped_element;
   vector<string> reduced_element;
+  vector<string> dictionary;
 //\\  cout<<"<       Argument Numumber:"<<argc<<endl;
   if(argc < 1)          // we expect exact one argument
  {
@@ -195,11 +197,51 @@ int main (int argc, char* argv[]) {
   //if file is open, tehn read from the file
   if (myfile.is_open())
         {
+// handle first input line specially
+          getline(myfile,firstl);
+          choped_element.push_back(firstl);
+          stringstream dict1(firstl);
+          string copyfs (firstl);  //copy of first string
+          while (dict1 >> temp)
+          {
+            copyfs.erase(0,copyfs.find_first_of(" \t")+1);
+            choped_element.push_back(copyfs);
+          }
+            choped_element.pop_back();
+            sort(choped_element.begin(),choped_element.end());
+            cout << "<      First line: "<<firstl<<endl;
+            printvector(choped_element);
+            parsed_array.push_back(choped_element);  //stored same format as other inputline into array
+
+            // handle the second input line spcially to build dictionary
+          getline(myfile,secondl);
+          choped_element.clear();           //remember to clean!!!
+          choped_element.push_back(secondl);
+          stringstream dict2(secondl);
+          string copyss (secondl);   //copy of second string
+          while (dict2 >> temp)
+          {
+            copyss.erase(0,copyss.find_first_of(" \t")+1);
+            choped_element.push_back(copyss);
+          }
+            choped_element.pop_back();
+            sort(choped_element.begin(),choped_element.end());
+            cout << "<      Second line: "<<secondl<<endl;
+            printvector(choped_element);
+            parsed_array.push_back(choped_element);  //stored same format as other inputline into array          
+          
+
+            //now handle first two inputline, build an dictionary
+          InputlineLoopCounter += 2;
+          vfindcommon(parsed_array[0],parsed_array[1],dictionary);
+          cout << "<  cs for first 2 line: \n:";
+          printvector(dictionary);
+          return 0;
+     
         while (getline (myfile,line))
                 {
-    //\\                   cout << "<       InputlineLoopCounter: "<<InputlineLoopCounter<<endl;
-      //                  parsed_element.clear(); //if I dont clear, it would include previous word, interesting
-                        choped_element.clear();
+                       cout << "<       InputlineLoopCounter: "<<InputlineLoopCounter<<endl;
+                       choped_element.clear();
      //\\                   cout << line <<endl;
                         choped_element.push_back(line);
                         stringstream ss(line);
