@@ -172,6 +172,25 @@ void recur(vector< vector<string> >&v, int ILC)
   }
 }
 
+void addintodict(vector<string>&common, vector<string>&dict)
+{
+  size_t len = common.size();
+  if (len <= 0)
+    return;
+  //for (vector<string>::iterator it = common.begin(); it != common.end(); ++it)  //vector iterator
+  for(size_t i = 0; i <len; i++)
+  {
+    stringstream ss(common[i]);
+    string temp; 
+    while (ss >> temp)
+    {
+      dict.push_back(temp);  //stored every word into dictionary
+    }
+  }
+  sort(dict.begin(),dict.end());
+  dict.erase(unique(dict.begin(),dict.end()),dict.end());
+}
+
 //
 int main (int argc, char* argv[]) {
   fstream myfile;
@@ -184,6 +203,7 @@ int main (int argc, char* argv[]) {
  // vector<string> parsed_element;
   vector<string> choped_element;
   vector<string> reduced_element;
+  vector<string> common_element;
   vector<string> dictionary;
 //\\  cout<<"<       Argument Numumber:"<<argc<<endl;
   if(argc < 1)          // we expect exact one argument
@@ -233,8 +253,11 @@ int main (int argc, char* argv[]) {
 
             //now handle first two inputline, build an dictionary
           InputlineLoopCounter += 2;
-          vfindcommon(parsed_array[0],parsed_array[1],dictionary);
+          vfindcommon(parsed_array[0],parsed_array[1],common_element);
           cout << "<  cs for first 2 line: \n:";
+          printvector(common_element);
+          cout << "<  dictionary\n";
+          addintodict(common_element,dictionary);
           printvector(dictionary);
           return 0;
      
@@ -247,7 +270,7 @@ int main (int argc, char* argv[]) {
                         stringstream ss(line);
       //\\                  cout<< "hashed key for this sentence is :"<<strHash(line)<<endl;
                         string copystr (line);
-                        while (ss >> temp)
+                        while (ss)
                         {
        //                 parsed_element.push_back(temp);
                         copystr.erase(0,copystr.find_first_of(" \t")+1);
