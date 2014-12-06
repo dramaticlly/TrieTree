@@ -191,6 +191,20 @@ void addintodict(vector<string>&common, vector<string>&dict)
   dict.erase(unique(dict.begin(),dict.end()),dict.end());
 }
 
+bool loopupdict(string _temp, vector<string> dict)
+{
+  size_t len = dict.size();
+  for (size_t i = 0; i<len; i++)
+  {
+    if(dict[i] == _temp)
+    {
+      cout << "dup: "<<_temp<<endl;
+      return true;
+    }
+  }
+  cout << "word: {"<<_temp<<"} is not in dictionary\n";
+  return false;
+}
 //
 int main (int argc, char* argv[]) {
   fstream myfile;
@@ -256,31 +270,52 @@ int main (int argc, char* argv[]) {
           vfindcommon(parsed_array[0],parsed_array[1],common_element);
           cout << "<  cs for first 2 line: \n:";
           printvector(common_element);
+  //\\        cout << "empty the array\n";
+          parsed_array.clear();
+  //\\        if( parsed_array.empty())
+  //\\          cout << "array is clean\n";
+          parsed_array.push_back(common_element);
+  //\\        print2dvector(parsed_array);
           cout << "<  dictionary\n";
           addintodict(common_element,dictionary);
           printvector(dictionary);
-          return 0;
+         // return 0;
      
         while (getline (myfile,line))
                 {
                        cout << "<       InputlineLoopCounter: "<<InputlineLoopCounter<<endl;
                        choped_element.clear();
-     //\\                   cout << line <<endl;
+                       cout << line <<endl;
                         choped_element.push_back(line);
                         stringstream ss(line);
       //\\                  cout<< "hashed key for this sentence is :"<<strHash(line)<<endl;
                         string copystr (line);
-                        while (ss)
+                        while (ss>>temp)
                         {
+                          bool shiftw = false;
        //                 parsed_element.push_back(temp);
-                        copystr.erase(0,copystr.find_first_of(" \t")+1);
-                        choped_element.push_back(copystr);
+                          //copystr.erase(0,copystr.find_first_of(" \t")+1);
+                          while (!loopupdict(temp,dictionary))  // if word not inside library
+                          {
+                            copystr.erase(0,copystr.find_first_of(" \t")+1);
+                            shiftw = true;
+                            if(ss)
+                              ss >> temp;
+                            else 
+                              break;
+                          }
+                          if (!shiftw)
+                            copystr.erase(0,copystr.find_first_of(" \t")+1);
+                          cout << "<  copystr: "<<copystr<<endl;
+                          choped_element.push_back(copystr);
                         }
-                       choped_element.pop_back();
+                       //choped_element.pop_back();
         //\\              printvector(parsed_element);
                      //  cout<<"Before Sort"<<endl;
                      //    printvector(choped_element);
                          sort(choped_element.begin(),choped_element.end());
+                         choped_element.erase(unique(choped_element.begin(),choped_element.end()),choped_element.end());
+
     //\\                   cout<<"After Sort"<<endl;
           //\\               printvector(parsed_element);
                        parsed_array.push_back(choped_element);
@@ -288,6 +323,7 @@ int main (int argc, char* argv[]) {
                 }
 
                 // this part of code can be optimized :), thinking about using recursion, and time complexcity would be log(n) instead of n-1
+                InputlineLoopCounter -= 1; //minus 1 because of initial library build, first 2 line merge into 1
                 recur(parsed_array,InputlineLoopCounter);
                 cout << "<  get out of recursion\n";
 
