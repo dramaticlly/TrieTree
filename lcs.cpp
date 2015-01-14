@@ -5,7 +5,25 @@
 #include <tr1/functional>
 #include <string>
 #include <algorithm>
+#include <cstddef>
+
 using namespace std;
+
+void printccount (vector< vector<int> > ccount)
+{
+//cout<<"num vertical: "<<ccount.size()<<endl;
+//cout<<"num horizontal: "<<ccount[0].size()<<endl;
+     for (size_t i = 0; i < ccount.size() ; i++)
+     {
+          for(size_t j = 0; j < ccount[i].size(); j++)
+          {
+               if( j != 0)
+                    cout<<" ,";
+               cout << ccount[i][j];
+          }
+          cout<<endl;
+     }
+}
 
 void printvector (vector<string> &tokens)
 {
@@ -21,93 +39,140 @@ void printvector (vector<string> &tokens)
         cout<<endl;
 }
 
-void print2dvector( vector< vector<string> >& tokens)
+void dynamite (vector<string>&v1,vector<string>&v2,vector<string>&v3)
 {
-        size_t len = tokens.size();
-        cout << "Here's the Parsed Array"<<endl;
-        cout << "I have "<<len<<" element\n";
+     size_t len1 = v1.size();
+     size_t len2 = v2.size();
+//cout<<"len1: "<<len1<<endl;
+//cout<<"len2: "<<len2<<endl;
 
-        for (size_t i = 0; i < len; i++)
-        {
-                cout << "Array["<< i <<"]= "<<endl;
-//\\                printvector(tokens[i]);
-        }
+     /*declaire 2d array; initialize to 0*/
+     vector< vector<int> > ccount(len1, vector<int>(len2,0));
+     vector< vector<int> > cindex(len1, vector<int>(len2,0));
+     int maxlen = -1;
+     int maxindex = -1;
+     int index = 0;
+//     string combine;
+     string space = " ";
+//     printccount(ccount);
+     for (size_t i = 0 ; i < len1; i++)
+          {
+          for (size_t j = 0; j < len2; j ++)
+               {
+                    if(v1[i] != v2[j])
+                         ccount[i][j] = 0;
+                    else if(v1[i] == v2[j])
+                         {    
+//            cout<<"common element{"<<v1[i]<<"}\n";
+                              if( i == 0 || j == 0)
+                                   {
+                                        ccount[i][j] = 1;
+                                        string combine(v1[i]);
+                                        v3.push_back(combine);
+                                        cindex[i][j] = index;
+                                        index ++;
+                                   }
+                              else if( i >= 1 && j >= 1)
+                                   {
+                                        ccount[i][j] = ccount [i-1][j-1] + 1;
+                                        {
+                                             if (ccount[i][j] == 1)
+                                             {
+                                                  string combine(v1[i]);
+                                                  v3.push_back(combine);
+                                                  cindex[i][j] = index;
+                                                  index ++;
+                                             }
+                                             else   //ccount[i][j] > 1
+                                             {
+                                                  int diff = ccount[i][j]-1;
+                                                  int tempindex = cindex[i-diff][j-diff];
+                                                  v3[tempindex].append(space);                                                  
+                                                  v3[tempindex].append(v1[i]);
+                                             }
+                                        }
+                                   }
+
+                              if (ccount[i][j] > maxlen)
+                                  { 
+                                    maxlen = ccount[i][j];
+                                    int diff = maxlen - 1;
+                                    maxindex = cindex[i-diff][j-diff];
+                                  }
+                         }
+               }
+          }
+   if(!v3.empty())
+     {
+//     printvector(v3);     
+//      cout<<"LCS: "<<v3[maxindex]<<endl;
+     }
+//   else // no common element
+//  cout<<"completely different\n";
+//cout<<"ccount\n";
+//     printccount(ccount);    
+//cout<<"cindex\n";
+//     printccount(cindex);    
 }
 
-int minsize (int a, int b)
+bool pred(string &s)
 {
-  if (a <= 0 || b <= 0)
-        return -1;
-  if ( a < b)
-        return a;
-  else               // a = b or a < b
-        return b;
+  return (s=="");
 }
-void vfindcommon (vector<string>&v1,vector<string>&v2,vector<string>&v3)
+
+void contains(vector<string>&v, string line)
 {
-// return strcmp(a,b) < 0;
- size_t v1len = v1.size();
- size_t v2len = v2.size();
- string space = " ";
- int ret = minsize(v1len,v2len);
- cout << "return code: "<<ret<<endl;
- if (ret > 0)
- {
- printvector(v1);
- printvector(v2);
-  for (size_t i = 0; i < v1len; i++)
-        {
-        //cout << "< i = "<<i;
-        for (size_t j = 0;  j< v2len; j++)
-                {
-        stringstream ss1(v1[i]);
-        string fword1;
-        ss1>>fword1;
-                stringstream ss2(v2[j]);
-                string fword2;
-                ss2>>fword2;
-                if(fword1 == fword2)   //v1[i] and v2[j] are space seperated words
-                      {
-                  //\\        cout<< "fword1: "<<fword1<<" ,fword2: "<<fword2<<endl;
-                          string nword1;
-                          string nword2;
-                          string lcommon;
-                          int comlen = 1;
-                          string combine;
-                          combine.append(fword1);
-                          combine.append(space);
-                          while (ss1>>nword1 && ss2>>nword2)
-                          {
-                            if (nword1 == nword2)
-                                {
-                                  combine.append(nword1);
-                                  combine.append(space);
-                //\\              cout<<"Next word: "<<nword1<<endl;
-                                  comlen ++;
-                                }
-                            else
-                              break;
-                          }
-                        combine.erase(combine.find_last_of(" "));
-                        cout<< "lcs: "<<combine<<endl;
-                        v3.push_back(combine);
-                //\\          cout<< "longest common length: "<<comlen<<endl;
-                      }
-            //\\   else
-            //\\            cout<< "different "<<i<<" , "<<j<<endl;
-                }
-        }
-        sort(v3.begin(),v3.end());
-        v3.erase(unique(v3.begin(),v3.end()),v3.end());
-    //\\    printvector(v3);
- }
-  else //if ret < )
-       {
-  cout <<v1len<<", "<<v2len<<endl;
-  return;
-       }
+  size_t len = v.size();
+  vector <string> res;
+  vector <string> _x;
+  vector <string> _y;
+  string parse_line;
+
+//printvector(v);
+  if (line.empty())
+    return;               //make sure is not empty
+
+  // parse new input line into words array
+  stringstream ss1(line);
+  while (ss1 >> parse_line)
+    _x.push_back(parse_line);
+
+  // loop through common element from first 2 inputlines, to find if ce still valid
+  for (size_t i = 0; i < len; i ++)
+  {
+//cout<<"current v[i]: "<<v[i]<<endl;
+_y.clear();
+res.clear();
+    // parse the every common element and compare
+    stringstream ss2(v[i]);
+    string temp; 
+    while (ss2 >> temp)
+    {
+      _y.push_back(temp);  //parse the string and format
+    }
+
+    dynamite(_x,_y,res);
+//cout<<"res \n";
+//printvector(res);
+    size_t  resnum = res.size();
+
+    if (!res.empty())
+      {
+        for (size_t j = 0; j < resnum; j ++)
+          v.push_back(res[j]);
+      }  
+                      //if inputline and ce are completely different, rm this ce
+      v[i]="";
+  }
+//printvector(v);
+  v.erase(remove_if(v.begin(),v.end(),pred), v.end());        //rm ce if its value=""
+  sort(v.begin(),v.end());
+  v.erase(unique(v.begin(),v.end()),v.end());
+//cout<<"final LCS for first three line:\n";
+//printvector(v);
 }
-string findlongest (vector<string>tokens)
+
+int findlongest (vector<string>tokens)
 {
 //\\    cout << "Enter findlongest function\n";
 //\\    cout << "array size is "<<tokens.size()<<endl;
@@ -124,236 +189,69 @@ string findlongest (vector<string>tokens)
     //\\            cout << "current max len: "<<maxlen<<endl;
             }
     }
-    return tokens[maxindex];
+    return maxindex;
 }
-
-void recur(vector< vector<string> >&v, int ILC)
+int main (int argc, char* argv[])
 {
-  vector<string> reduced_element;
-  reduced_element.clear();
-
-  if (ILC == 0)
-    return;
-  else if (ILC == 1)    //base case
-    return;
- else if (ILC % 2 == 0)   //gurantee ILC is even
-  {
-    cout <<"<  even, ILC: "<<ILC<<endl;
-    for (int i = 0; i<ILC; i += 2)
-    {
-      cout <<"<  i:"<<i<<endl;
-      reduced_element.clear();
-      vfindcommon(v[i],v[i+1],reduced_element);
-     // sort(reduced_element.begin(),reduced_element.end());
-      //\\v.erase(v.begin(),v.begin()+2);     //after erase, index changes 
-      v.push_back(reduced_element);
-    }
-    v.erase(v.begin(),v.begin()+ILC);
-    print2dvector(v);
-    ILC = ILC / 2;
-    recur(v,ILC);
-  }
-  else if (ILC % 2 == 1)
-  {
-    cout <<"<  odd, ILC: "<<ILC<<endl;
-    for (int i = 0; i < ILC -2 ; i += 2)
-    {
-      cout <<"<  i:"<<i<<endl;
-      reduced_element.clear();
-      vfindcommon(v[i],v[i+1],reduced_element);
-      //sort(reduced_element.begin(),reduced_element.end());
-     //\\ v.erase(v.begin(),v.begin()+2);
-      v.push_back(reduced_element);
-    }
-    v.erase(v.begin(),v.begin()+ILC-1); //since it's odd, keep last one
-    print2dvector(v);
-    ILC = (ILC / 2) + 1;
-    recur(v,ILC);
-  }
-}
-
-void addintodict(vector<string>&common, vector<string>&dict)
-{
-  size_t len = common.size();
-  if (len <= 0)
-    return;
-  //for (vector<string>::iterator it = common.begin(); it != common.end(); ++it)  //vector iterator
-  for(size_t i = 0; i <len; i++)
-  {
-    stringstream ss(common[i]);
-    string temp; 
-    while (ss >> temp)
-    {
-      dict.push_back(temp);  //stored every word into dictionary
-    }
-  }
-  sort(dict.begin(),dict.end());
-  dict.erase(unique(dict.begin(),dict.end()),dict.end());
-}
-
-bool loopupdict(string _temp, vector<string> dict)
-{
-  size_t len = dict.size();
-  for (size_t i = 0; i<len; i++)
-  {
-    if(dict[i] == _temp)
-    {
-      cout << "dup: "<<_temp<<endl;
-      return true;
-    }
-  }
-  cout << "word: {"<<_temp<<"} is not in dictionary\n";
-  return false;
-}
-//
-int main (int argc, char* argv[]) {
   fstream myfile;
-  string line;
-  string temp;
-  string firstl;
-  string secondl;
+
   int InputlineLoopCounter = 0;
-  vector< vector<string> > parsed_array;
- // vector<string> parsed_element;
-  vector<string> choped_element;
-  vector<string> reduced_element;
-  vector<string> common_element;
-  vector<string> dictionary;
-//\\  cout<<"<       Argument Numumber:"<<argc<<endl;
+
+     vector <string > x;
+     vector <string > y;
+     vector <string > z;
+
+     string firstl;
+     string secondl;
+     string line;
+
+     string fword;
+     string sword;
+
   if(argc < 1)          // we expect exact one argument
- {
+  {
          std::cerr << "Usage: " << argv[0] << " File Path " << std::endl;
          return -1;
- }
-
+  }
   myfile.open (argv[1]);  //argv[0] is ./lcs, not the first argument!!!
-  //\\cout << "<    Successful open the file!\n<    File name: \""<<argv[1]<<"\""<<endl;
+//\\cout << "<    Successful open the file!\n<    File name: \""<<argv[1]<<"\""<<endl;
   //if file is open, tehn read from the file
   if (myfile.is_open())
-        {
-// handle first input line specially
-          getline(myfile,firstl);
-          choped_element.push_back(firstl);
-          stringstream dict1(firstl);
-          string copyfs (firstl);  //copy of first string
-          while (dict1 >> temp)
-          {
-            copyfs.erase(0,copyfs.find_first_of(" \t")+1);
-            choped_element.push_back(copyfs);
-          }
-            choped_element.pop_back();
-            sort(choped_element.begin(),choped_element.end());
-            cout << "<      First line: "<<firstl<<endl;
-            printvector(choped_element);
-            parsed_array.push_back(choped_element);  //stored same format as other inputline into array
+      {
+      getline(myfile,firstl);
+//cout<<"first line: "<<firstl<<endl; 
+         stringstream dict1(firstl);
+         while (dict1>>fword)
+         {
+          x.push_back(fword);         
+         }
 
-            // handle the second input line spcially to build dictionary
-          getline(myfile,secondl);
-          choped_element.clear();           //remember to clean!!!
-          choped_element.push_back(secondl);
-          stringstream dict2(secondl);
-          string copyss (secondl);   //copy of second string
-          while (dict2 >> temp)
-          {
-            copyss.erase(0,copyss.find_first_of(" \t")+1);
-            choped_element.push_back(copyss);
-          }
-            choped_element.pop_back();
-            sort(choped_element.begin(),choped_element.end());
-            cout << "<      Second line: "<<secondl<<endl;
-            printvector(choped_element);
-            parsed_array.push_back(choped_element);  //stored same format as other inputline into array          
-          
+         //do so for the second line
+         getline(myfile,secondl);
+//cout<<"second line: "<<secondl<<endl;
+         stringstream dict2(secondl);
+         while (dict2>>sword)
+         {
+          y.push_back(sword);         
+         }
 
-            //now handle first two inputline, build an dictionary
-          InputlineLoopCounter += 2;
-          vfindcommon(parsed_array[0],parsed_array[1],common_element);
-          cout << "<  cs for first 2 line: \n:";
-          printvector(common_element);
-  //\\        cout << "empty the array\n";
-          parsed_array.clear();
-  //\\        if( parsed_array.empty())
-  //\\          cout << "array is clean\n";
-          parsed_array.push_back(common_element);
-  //\\        print2dvector(parsed_array);
-          cout << "<  dictionary\n";
-          addintodict(common_element,dictionary);
-          printvector(dictionary);
-         // return 0;
-     
-        while (getline (myfile,line))
-                {
-                       cout << "<       InputlineLoopCounter: "<<InputlineLoopCounter<<endl;
-                       choped_element.clear();
-                       cout << line <<endl;
-                        choped_element.push_back(line);
-                        stringstream ss(line);
-      //\\                  cout<< "hashed key for this sentence is :"<<strHash(line)<<endl;
-                        string copystr (line);
-                        while (ss>>temp)
-                        {
-                          bool shiftw = false;
-       //                 parsed_element.push_back(temp);
-                          //copystr.erase(0,copystr.find_first_of(" \t")+1);
-                          while (!loopupdict(temp,dictionary))  // if word not inside library
-                          {
-                            copystr.erase(0,copystr.find_first_of(" \t")+1);
-                            shiftw = true;
-                            if(ss)
-                              ss >> temp;
-                            else 
-                              break;
-                          }
-                          if (!shiftw)
-                            copystr.erase(0,copystr.find_first_of(" \t")+1);
-                          cout << "<  copystr: "<<copystr<<endl;
-                          choped_element.push_back(copystr);
-                        }
-                       //choped_element.pop_back();
-        //\\              printvector(parsed_element);
-                     //  cout<<"Before Sort"<<endl;
-                     //    printvector(choped_element);
-                         sort(choped_element.begin(),choped_element.end());
-                         choped_element.erase(unique(choped_element.begin(),choped_element.end()),choped_element.end());
-
-    //\\                   cout<<"After Sort"<<endl;
-          //\\               printvector(parsed_element);
-                       parsed_array.push_back(choped_element);
-                       InputlineLoopCounter ++;
-                }
-
-                // this part of code can be optimized :), thinking about using recursion, and time complexcity would be log(n) instead of n-1
-                InputlineLoopCounter -= 1; //minus 1 because of initial library build, first 2 line merge into 1
-                recur(parsed_array,InputlineLoopCounter);
-                cout << "<  get out of recursion\n";
-
-
- /*             for (int i = 1; i < InputlineLoopCounter ; i ++)   //if 3 lines, need only 2 comparison
-                {
-                    reduced_element.clear();
-        //\\            cout<<" enter vfindcommon function"<<endl;
-                    vfindcommon(parsed_array[0],parsed_array[1],reduced_element);  //every time after comparison, resize vector,so alway [0] and [1]
-                    sort(reduced_element.begin(),reduced_element.end());
-                    parsed_array.erase(parsed_array.begin(),parsed_array.begin()+2);
-                    parsed_array.insert(parsed_array.begin(),reduced_element);
-//\\        cout <<"<  print reduced element\n";
-//\\                    printvector(reduced_element);
-//\\        cout <<"<  print element array\n";
-//\\                    print2dvector(parsed_array);
-                }
- */               
-            if (parsed_array.size() == 1)
-            {
-                string lcs = findlongest(parsed_array[0]);
-                cout << "<  lcs: "<<lcs<<endl;
-            }
-            else 
-                cout <<"array problem\n";
-        }
+//cout<<"handle first 2 lines\n";
+//        dynamite(parsed_array[0],parsed_array[1],reduced_element);
+        dynamite(x,y,z);
+        InputlineLoopCounter+=2;
+  while(getline(myfile,line))
+  {
+//    cout<<"line: "<<line<<endl;
+    contains(z,line);
+    InputlineLoopCounter++;
+  }
+//cout<<"InputlineLoopCounter: "<<InputlineLoopCounter<<endl;
+//cout<<"{"<<z[findlongest(z)]<<"}"<<endl;
+  cout<<z[findlongest(z)]<<endl;
+      }      
   else
         cout << "Unable to read from file"<<endl;
 
   myfile.close();
   return 0;
 }
-
